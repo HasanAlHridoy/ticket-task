@@ -31,16 +31,40 @@ class CustomBottomNavBar extends ConsumerWidget {
     // Use .valueOrNull to safely access isSwitched, default to false if loading/error
     return [
       BottomNavUtils.buildItem(
-        activeIcon: Icon(Icons.analytics, size: 30.r, color: context.theme.primaryColor),
-        icon: Icon(Icons.analytics_outlined, size: 30.r, color: secondaryColor),
+        label: 'Tickets',
+        activeIcon: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          decoration: BoxDecoration(
+            color: context.theme.primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          child: Icon(Icons.analytics, size: 24.r, color: context.theme.primaryColor),
+        ),
+        icon: Icon(Icons.analytics_outlined, size: 24.r, color: secondaryColor),
       ),
       BottomNavUtils.buildItem(
-        activeIcon: Icon(Icons.supervised_user_circle_rounded, size: 30.r, color: context.theme.primaryColor),
-        icon: Icon(Icons.supervised_user_circle_outlined, size: 30.r, color: secondaryColor),
+        label: 'Contacts',
+        activeIcon: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          decoration: BoxDecoration(
+            color: context.theme.primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          child: Icon(Icons.supervised_user_circle_rounded, size: 24.r, color: context.theme.primaryColor),
+        ),
+        icon: Icon(Icons.supervised_user_circle_outlined, size: 24.r, color: secondaryColor),
       ),
       BottomNavUtils.buildItem(
-        activeIcon: Icon(Icons.person, size: 40.r, color: context.theme.primaryColor),
-        icon: Icon(Icons.person_outline_rounded, size: 40.r, color: secondaryColor),
+        label: 'Profile',
+        activeIcon: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+          decoration: BoxDecoration(
+            color: context.theme.primaryColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          child: Icon(Icons.person, size: 24.r, color: context.theme.primaryColor),
+        ),
+        icon: Icon(Icons.person_outline_rounded, size: 24.r, color: secondaryColor),
       ),
     ];
   }

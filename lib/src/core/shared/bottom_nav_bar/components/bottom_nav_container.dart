@@ -11,10 +11,9 @@ class BottomNavContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
-      color:  context.theme.scaffoldBackgroundColor,
-      padding: EdgeInsets.fromLTRB(0, 12, 0, 3),
+      color: context.theme.scaffoldBackgroundColor,
+      padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
       child: MediaQuery.removePadding(
         context: context,
         removeBottom: true,
