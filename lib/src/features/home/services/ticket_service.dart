@@ -17,7 +17,7 @@ class TicketService {
         dateTime: DateTime.now().subtract(const Duration(minutes: 5)),
         status: TicketStatus.open,
         priority: TicketPriority.low,
-        tags: [TicketTagType.low, TicketTagType.open],
+        tags: [TicketTagType.open],
       ),
       Ticket(
         id: '#ID 132198424',
@@ -29,7 +29,7 @@ class TicketService {
         status: TicketStatus.open,
         priority: TicketPriority.urgent,
         isOverdue: true,
-        tags: [TicketTagType.urgent, TicketTagType.open, TicketTagType.spam],
+        tags: [TicketTagType.open, TicketTagType.spam],
       ),
       Ticket(
         id: '#ID 132198425',
@@ -40,7 +40,7 @@ class TicketService {
         status: TicketStatus.open,
         priority: TicketPriority.low,
         customerResponded: true,
-        tags: [TicketTagType.low, TicketTagType.open],
+        tags: [TicketTagType.open, TicketTagType.customerResponded],
       ),
     ];
 
@@ -50,10 +50,8 @@ class TicketService {
       final isThird = i % 3 == 0;
 
       TicketPriority priority;
-      if (i % 5 == 0) {
+      if (i % 3 == 0) {
         priority = TicketPriority.urgent;
-      } else if (isEven) {
-        priority = TicketPriority.medium;
       } else {
         priority = TicketPriority.low;
       }
@@ -64,12 +62,11 @@ class TicketService {
 
       // Generate Random Tags
       List<TicketTagType> tags = [];
-      // Add random priority tag
-      if (_random.nextBool()) tags.add(TicketTagType.urgent);
-      if (_random.nextBool()) tags.add(TicketTagType.low);
-      // Add random status tag
+      // Add random status tags
       if (_random.nextBool()) tags.add(TicketTagType.open);
       if (_random.nextBool()) tags.add(TicketTagType.spam);
+      if (_random.nextBool()) tags.add(TicketTagType.closed);
+      if (_random.nextBool()) tags.add(TicketTagType.customerResponded);
 
       // Ensure at least one tag
       if (tags.isEmpty) tags.add(TicketTagType.open);

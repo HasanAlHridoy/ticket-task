@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gian_ticket_task/src/core/utils/extensions/context.dart';
+import 'package:gian_ticket_task/src/features/filters/controller/filters.dart';
+import 'package:gian_ticket_task/src/features/filters/views/filters.dart';
 import 'package:gian_ticket_task/src/features/home/controller/home.dart';
 import 'package:gian_ticket_task/src/features/home/views/components/ticket_card.dart';
 
@@ -65,7 +67,9 @@ class HomeView extends ConsumerWidget {
                       color: Colors.black54, // lighter grey
                       size: 25.r,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FiltersView()));
+                    },
                   ),
                 ],
               ),
@@ -74,12 +78,42 @@ class HomeView extends ConsumerWidget {
               child: ref
                   .watch(homeProvider)
                   .when(
-                    data: (tickets) => ListView.builder(
-                      itemCount: tickets.length, // Let's repeat to fill screen if needed, or just use length
-                      padding: EdgeInsets.only(bottom: 16.h),
-                      itemBuilder: (context, index) {
-                        return TicketCard(ticket: tickets[index]);
+                    data: (tickets) => RefreshIndicator(
+                      onRefresh: () async {
+                        ref.read(filtersProvider.notifier).clearFilters();
+                        await notifier.refreshTickets();
                       },
+                      child: tickets.isEmpty
+                          ? SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              child: SizedBox(
+                                height: MediaQuery.of(context).size.height * 0.7,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.search_off, size: 64.r, color: Colors.grey.shade400),
+                                      SizedBox(height: 16.h),
+                                      Text(
+                                        'Result not found',
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: tickets.length,
+                              padding: EdgeInsets.only(bottom: 16.h),
+                              itemBuilder: (context, index) {
+                                return TicketCard(ticket: tickets[index]);
+                              },
+                            ),
                     ),
                     loading: () =>
                         Center(child: CircularProgressIndicator(color: context.theme.scaffoldBackgroundColor)),
