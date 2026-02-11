@@ -1,13 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gian_ticket_task/src/features/profile/model/response/profile.dart';
+import 'package:gian_ticket_task/src/features/profile/services/profile_service.dart';
 
-typedef ProfileNotifier = NotifierProvider<ProfileProvider, void>;
+typedef ProfileNotifier = AsyncNotifierProvider<ProfileProvider, Profile>;
 
 final profileProvider = ProfileNotifier(ProfileProvider.new);
 
-class ProfileProvider extends Notifier<void> {
+class ProfileProvider extends AsyncNotifier<Profile> {
   @override
-  void build() {
-    debugPrint('ProfileProvider');
+  Future<Profile> build() async {
+    return ProfileService().fetchProfile();
+  }
+
+  Future<void> refreshProfile() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() => ProfileService().fetchProfile());
   }
 }
