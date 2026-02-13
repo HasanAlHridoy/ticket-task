@@ -30,10 +30,10 @@ class FilterService {
       return FilterOption(id: t.name, label: name);
     }).toList();
 
-    // ── Extract unique sender names as "Brand" ──
-    final senders = tickets.map((t) => t.senderName).toSet();
-    final brandOptions = senders.map((s) {
-      return FilterOption(id: s.toLowerCase().replaceAll(' ', '_'), label: s, iconUrl: s.toLowerCase());
+    // ── Extract unique brands ──
+    final brands = tickets.map((t) => t.brand).toSet();
+    final brandOptions = brands.map((b) {
+      return FilterOption(id: b.toLowerCase().replaceAll(' ', '_'), label: b, iconUrl: b.toLowerCase());
     }).toList();
 
     return FilterConfig(
@@ -52,7 +52,6 @@ class FilterService {
       TicketTagType.open => 'Open',
       TicketTagType.spam => 'Spam',
       TicketTagType.closed => 'Closed',
-      TicketTagType.customerResponded => 'Customer Responded',
     };
   }
 }

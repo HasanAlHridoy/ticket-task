@@ -65,22 +65,24 @@ class TicketCard extends StatelessWidget {
           Wrap(
             spacing: 8.w,
             runSpacing: 8.h,
-            children: ticket.tags.map((tag) {
-              switch (tag) {
-                case TicketTagType.urgent:
-                  return _buildTag(text: 'Urgent', color: Colors.white, icon: Icons.circle, iconColor: Colors.red);
-                case TicketTagType.low:
-                  return _buildTag(text: 'Low', color: Colors.white, icon: Icons.circle, iconColor: Colors.green);
-                case TicketTagType.open:
-                  return _buildTag(text: 'Open', color: Colors.grey, isOutlined: true);
-                case TicketTagType.spam:
-                  return _buildTag(text: 'Spam', color: Colors.grey, isOutlined: true);
-                case TicketTagType.closed:
-                  return _buildTag(text: 'Closed', color: Colors.grey, isOutlined: true);
-                case TicketTagType.customerResponded:
-                  return _buildTag(text: 'Customer Responded', color: Colors.grey, isOutlined: true);
-              }
-            }).toList(),
+            children: [
+              // 1. Priority Chip (Always first)
+              _buildPriorityTag(ticket.priority),
+
+              // 2. Other Tags
+              ...ticket.tags.map((tag) {
+                switch (tag) {
+                  case TicketTagType.open:
+                    return _buildTag(text: 'Open', color: Colors.grey, isOutlined: true);
+                  case TicketTagType.spam:
+                    return _buildTag(text: 'Spam', color: Colors.grey, isOutlined: true);
+                  case TicketTagType.closed:
+                    return _buildTag(text: 'Closed', color: Colors.grey, isOutlined: true);
+                  default:
+                    return const SizedBox.shrink();
+                }
+              }),
+            ],
           ),
         ],
       ),
@@ -98,8 +100,8 @@ class TicketCard extends StatelessWidget {
       textColor = const Color(0xFFFF9800); // Orange
     } else if (ticket.customerResponded) {
       text = 'Customer responded';
-      backgroundColor = const Color(0xFFF3E5F5); // Light purple
-      textColor = const Color(0xFF9C27B0); // Purple
+      backgroundColor = const Color(0xFF5A49B4).withValues(alpha: 0.1); // Light purple
+      textColor = const Color(0xFF5A49B4); // Purple
     } else {
       text = 'New';
       backgroundColor = const Color(0xFFE3F2FD); // Light blue
@@ -114,6 +116,30 @@ class TicketCard extends StatelessWidget {
         style: TextStyle(color: textColor, fontSize: 12.sp, fontWeight: FontWeight.w600),
       ),
     );
+  }
+
+  Widget _buildPriorityTag(TicketPriority priority) {
+    switch (priority) {
+      case TicketPriority.urgent:
+        return _buildTag(
+          text: 'Urgent',
+          color: Colors.white,
+          icon: Icons.circle,
+          iconColor: Colors.red,
+          isOutlined: true, // As per screenshot, chips have borders
+        );
+      case TicketPriority.low:
+        return _buildTag(
+          text: 'Low',
+          color: Colors.white,
+          icon: Icons.circle,
+          iconColor: Colors.green,
+          isOutlined: true,
+        );
+      case TicketPriority.medium:
+        // Fallback or handle medium if needed
+        return _buildTag(text: 'Medium', color: Colors.white, isOutlined: true);
+    }
   }
 
   Widget _buildTag({
@@ -133,7 +159,7 @@ class TicketCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[Icon(icon, size: 8.r, color: iconColor), SizedBox(width: 6.w)],
+          if (icon != null) ...[Icon(icon, size: 8.r, color: iconColor), SizedBox(width: 8.w)],
           Text(
             text,
             style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade700, fontWeight: FontWeight.w500),

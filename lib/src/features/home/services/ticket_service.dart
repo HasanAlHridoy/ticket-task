@@ -14,6 +14,7 @@ class TicketService {
         title: 'Search view, which can display dynamic suggestions, is the focused state of...',
         description: 'Search view, which can display dynamic suggestions, is the focused state of...',
         senderName: 'Michale',
+        brand: 'Gain SL',
         dateTime: DateTime.now().subtract(const Duration(minutes: 5)),
         status: TicketStatus.open,
         priority: TicketPriority.low,
@@ -24,8 +25,8 @@ class TicketService {
         title: 'Ticket subject small',
         description: 'Ticket subject small',
         senderName: 'Noah',
+        brand: 'Gain',
         dateTime: DateTime.now().subtract(const Duration(hours: 1)),
-
         status: TicketStatus.open,
         priority: TicketPriority.urgent,
         isOverdue: true,
@@ -36,11 +37,12 @@ class TicketService {
         title: 'Search view, which can display dynamic suggestions, is the focused state of...',
         description: 'Search view, which can display dynamic suggestions, is the focused state of...',
         senderName: 'Jonus',
+        brand: 'Gain HQ',
         dateTime: DateTime.now().subtract(const Duration(hours: 2)),
         status: TicketStatus.open,
         priority: TicketPriority.low,
         customerResponded: true,
-        tags: [TicketTagType.open, TicketTagType.customerResponded],
+        tags: [TicketTagType.open],
       ),
     ];
 
@@ -66,10 +68,14 @@ class TicketService {
       if (_random.nextBool()) tags.add(TicketTagType.open);
       if (_random.nextBool()) tags.add(TicketTagType.spam);
       if (_random.nextBool()) tags.add(TicketTagType.closed);
-      if (_random.nextBool()) tags.add(TicketTagType.customerResponded);
+      if (_random.nextBool()) tags.add(TicketTagType.closed);
 
       // Ensure at least one tag
       if (tags.isEmpty) tags.add(TicketTagType.open);
+
+      String brand = 'Gain';
+      if (i % 3 == 0) brand = 'Gain HQ';
+      if (i % 3 == 1) brand = 'Gain SL';
 
       tickets.add(
         Ticket(
@@ -77,6 +83,7 @@ class TicketService {
           title: isThird ? 'Ticket subject small $i' : 'Search view, which can display dynamic suggestions $i',
           description: 'Description for ticket $i',
           senderName: isEven ? 'User $i' : 'Sender $i',
+          brand: brand,
           dateTime: DateTime.now().subtract(Duration(hours: i * 2)),
           status: status,
           priority: priority,
