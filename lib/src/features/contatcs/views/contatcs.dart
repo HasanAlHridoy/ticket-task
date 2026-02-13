@@ -57,12 +57,12 @@ class ContacsView extends ConsumerWidget {
               onChanged: notifier.searchContacts,
               decoration: InputDecoration(
                 hintText: 'Search contacts',
-                hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400, color: Colors.grey.shade500),
+                hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.grey.shade500),
                 prefixIcon: Padding(
                   padding: EdgeInsets.only(left: 16.w, right: 8.w),
                   child: Icon(Icons.search, color: Colors.grey.shade600, size: 24.r),
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 14.h),
+                contentPadding: EdgeInsets.symmetric(vertical: 12.h),
                 filled: true,
                 fillColor: const Color(0xFFF5F5F7), // Light grey background
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.r), borderSide: BorderSide.none),
@@ -76,17 +76,17 @@ class ContacsView extends ConsumerWidget {
                 ),
               ),
             ),
-            SizedBox(height: 24.h),
+            SizedBox(height: 22.h),
             // Contact Count
             contactsAsync.when(
               data: (contacts) => Text(
                 '${contacts.length} Contacts',
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.grey.shade600),
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Colors.grey.shade600),
               ),
               loading: () => const SizedBox.shrink(),
               error: (error, stack) => const SizedBox.shrink(),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 22.h),
             // Contact List
             Expanded(
               child: contactsAsync.when(
@@ -101,8 +101,8 @@ class ContacsView extends ConsumerWidget {
                   }
                   return ListView.separated(
                     itemCount: contacts.length,
-                    padding: EdgeInsets.only(bottom: 20.h),
-                    separatorBuilder: (context, index) => SizedBox(height: 16.h),
+                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                    separatorBuilder: (context, index) => SizedBox(height: 12.h),
                     itemBuilder: (context, index) {
                       return ContactCard(contact: contacts[index]);
                     },
@@ -128,8 +128,8 @@ class ContactCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAFAFA), // Very light grey/white
-        borderRadius: BorderRadius.circular(16.r),
+        color: const Color(0xFFF9FAFB), // Very light grey/white
+        borderRadius: BorderRadius.circular(8.r),
         // border: Border.all(color: Colors.grey.shade200), // Optional border if needed for contrast
       ),
       child: Column(
@@ -138,7 +138,7 @@ class ContactCard extends StatelessWidget {
           Row(
             children: [
               CircleAvatar(
-                radius: 24.r,
+                radius: 20.r,
                 backgroundImage: NetworkImage(contact.imageUrl),
                 backgroundColor: Colors.grey.shade300,
               ),
@@ -146,13 +146,13 @@ class ContactCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   contact.name,
-                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
                 ),
               ),
               Consumer(
                 builder: (context, ref, _) {
                   return PopupMenuButton<String>(
-                    icon: Icon(Icons.more_vert, color: Colors.black54, size: 24.r),
+                    icon: Icon(Icons.more_vert, color: Colors.black87, size: 24.r),
                     color: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                     onSelected: (value) {
@@ -240,11 +240,11 @@ class ContactCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 12.h),
           _buildInfoRow(Icons.email_outlined, contact.email),
-          SizedBox(height: 8.h),
+          SizedBox(height: 4.h),
           _buildInfoRow(Icons.phone_outlined, contact.phone),
-          SizedBox(height: 8.h),
+          SizedBox(height: 4.h),
           _buildInfoRow(Icons.location_on_outlined, contact.address),
         ],
       ),
@@ -254,12 +254,12 @@ class ContactCard extends StatelessWidget {
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 18.r, color: Colors.grey.shade600),
-        SizedBox(width: 10.w),
+        Icon(icon, size: 16.r, color: Colors.grey.shade500),
+        SizedBox(width: 6.w),
         Expanded(
           child: Text(
             text,
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.grey.shade600),
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500, color: Colors.grey.shade600),
           ),
         ),
       ],

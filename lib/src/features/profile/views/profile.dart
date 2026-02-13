@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gian_ticket_task/src/core/utils/extensions/context.dart';
+import 'package:gian_ticket_task/src/core/utils/extensions/gap.dart';
 import 'package:gian_ticket_task/src/features/profile/controller/profile.dart';
 import 'package:gian_ticket_task/src/features/profile/model/response/profile.dart';
 
@@ -14,7 +14,6 @@ class ProfileView extends ConsumerWidget {
     final profileAsync = ref.watch(profileProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
           'My profile',
@@ -22,11 +21,10 @@ class ProfileView extends ConsumerWidget {
         ),
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.white,
       ),
       body: profileAsync.when(
         data: (profile) => _buildProfileContent(context, profile),
-        loading: () => Center(child: CircularProgressIndicator(color: context.theme.primaryColor)),
+        loading: () => Center(child: CircularProgressIndicator(color: Colors.white)),
         error: (error, stack) => Center(child: Text('Error: $error')),
       ),
     );
@@ -40,14 +38,15 @@ class ProfileView extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header Section
+            8.ph,
             Container(
               width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
-              color: const Color(0xFFEAF8FB), // Light blue background
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+              color: const Color(0xFFE6F6FC), // Light blue background
               child: Row(
                 children: [
                   CircleAvatar(
-                    radius: 36.r,
+                    radius: 30.r,
                     backgroundImage: NetworkImage(profile.imageUrl),
                     backgroundColor: Colors.grey.shade300,
                   ),
@@ -59,48 +58,56 @@ class ProfileView extends ConsumerWidget {
                         Text(
                           '${profile.firstName} ${profile.lastName}',
                           style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF4A5568),
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF5C5D76),
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: 2.h),
                         Text(
                           profile.role,
-                          style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade600),
+                          style: TextStyle(fontSize: 14.sp, color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
                   IconButton(
                     onPressed: () {},
-                    icon: Icon(Icons.edit_outlined, color: Colors.black54, size: 24.r),
+                    icon: Icon(Icons.edit_outlined, color: Colors.black87, size: 24.r),
                   ),
                 ],
               ),
             ),
 
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 16.h),
                   // Basic Info
                   Text(
                     'Basic info',
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Colors.grey.shade600),
                   ),
                   SizedBox(height: 16.h),
-                  _buildInfoField('First name', profile.firstName),
-                  _buildInfoField('Last name', profile.lastName),
-                  _buildInfoField('Email', profile.email),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildInfoField('First name', profile.firstName),
+                        _buildInfoField('Last name', profile.lastName),
+                        _buildInfoField('Email', profile.email),
+                      ],
+                    ),
+                  ),
 
-                  SizedBox(height: 32.h),
+                  SizedBox(height: 24.h),
                   // Assigned Roles
                   Text(
                     'Assigned roles (${profile.assignedRoles.length})',
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Colors.grey.shade600),
                   ),
                   SizedBox(height: 16.h),
                   SizedBox(
@@ -115,7 +122,7 @@ class ProfileView extends ConsumerWidget {
                     ),
                   ),
 
-                  SizedBox(height: 40.h),
+                  SizedBox(height: 24.h),
                   // Logout Button
                   SizedBox(
                     width: double.infinity,
@@ -124,12 +131,12 @@ class ProfileView extends ConsumerWidget {
                       icon: Icon(Icons.logout, color: Colors.red.shade400),
                       label: Text(
                         'Log out',
-                        style: TextStyle(color: Colors.red.shade400, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: Colors.red.shade400, fontSize: 16.sp, fontWeight: FontWeight.w600),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFFEAEA), // Light pinkish
                         foregroundColor: Colors.red.shade400,
-                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        padding: EdgeInsets.symmetric(vertical: 10.h),
                         elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
                       ),
@@ -147,18 +154,18 @@ class ProfileView extends ConsumerWidget {
 
   Widget _buildInfoField(String label, String value) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.only(bottom: 8.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade500),
+            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Colors.grey.shade500),
           ),
-          SizedBox(height: 4.h),
+          SizedBox(height: 2.h),
           Text(
             value,
-            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w600, color: Colors.black87),
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -167,7 +174,7 @@ class ProfileView extends ConsumerWidget {
 
   Widget _buildRoleCard(AssignedRole role) {
     return Container(
-      width: 260.w,
+      width: 280.w,
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: const Color(0xFFF8F9FA), // Very light grey
@@ -179,24 +186,24 @@ class ProfileView extends ConsumerWidget {
         children: [
           Text(
             role.title,
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w400, color: Colors.black87),
+            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w500, color: Colors.black87),
           ),
-          Divider(color: Colors.grey.shade300, height: 24.h),
+          Divider(color: Colors.grey.shade300, height: 16.h),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Group',
-                style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Colors.grey.shade500),
               ),
               SizedBox(height: 4.h),
               Text(
                 role.group,
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.grey.shade600),
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
               ),
             ],
           ),
-          SizedBox(height: 12.h),
+          // SizedBox(height: 8.h),
           Row(
             children: [
               Expanded(
@@ -205,20 +212,20 @@ class ProfileView extends ConsumerWidget {
                   children: [
                     Text(
                       'Manager',
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
+                      style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Colors.grey.shade500),
                     ),
                     SizedBox(height: 4.h),
                     Row(
                       children: [
                         CircleAvatar(
-                          radius: 12.r,
+                          radius: 16.r,
                           backgroundImage: NetworkImage(role.managerImageUrl),
                           backgroundColor: Colors.grey.shade300,
                         ),
                         SizedBox(width: 8.w),
                         Text(
                           role.managerName,
-                          style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade600),
+                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
                         ),
                       ],
                     ),
