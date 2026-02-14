@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gian_ticket_task/src/core/router/app_routers.dart';
 import 'package:gian_ticket_task/src/core/utils/extensions/context.dart';
 import 'package:gian_ticket_task/src/features/filters/controller/filters.dart';
-import 'package:gian_ticket_task/src/features/filters/views/filters.dart';
 import 'package:gian_ticket_task/src/features/home/controller/home.dart';
 import 'package:gian_ticket_task/src/features/home/views/components/ticket_card.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeView extends ConsumerWidget {
   static const String name = 'home';
@@ -59,7 +60,7 @@ class HomeView extends ConsumerWidget {
                 children: [
                   Text(
                     '${notifier.ticketCount} tickets',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade600, fontWeight: FontWeight.w400),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
                   ),
                   IconButton(
                     icon: Icon(
@@ -68,7 +69,7 @@ class HomeView extends ConsumerWidget {
                       size: 25.r,
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const FiltersView()));
+                      context.push(AppRoutes.filters);
                     },
                   ),
                 ],
@@ -79,6 +80,7 @@ class HomeView extends ConsumerWidget {
                   .watch(homeProvider)
                   .when(
                     data: (tickets) => RefreshIndicator(
+                      color: context.theme.scaffoldBackgroundColor,
                       onRefresh: () async {
                         ref.read(filtersProvider.notifier).clearFilters();
                         await notifier.refreshTickets();

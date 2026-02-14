@@ -7,6 +7,7 @@ import 'package:gian_ticket_task/src/features/filters/controller/filters.dart';
 import 'package:gian_ticket_task/src/features/filters/model/response/filters.dart';
 
 class FiltersView extends ConsumerWidget {
+  static const String name = 'filters';
   const FiltersView({super.key});
 
   @override
@@ -22,7 +23,7 @@ class FiltersView extends ConsumerWidget {
         ),
         title: Text(
           'Filters',
-          style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w600),
         ),
         centerTitle: false,
         elevation: 0,
@@ -36,7 +37,7 @@ class FiltersView extends ConsumerWidget {
             },
             child: Text(
               'Apply',
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500, color: Colors.grey),
+              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: Colors.grey),
             ),
           ),
         ],
@@ -44,7 +45,7 @@ class FiltersView extends ConsumerWidget {
       body: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
         child: asyncConfig.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => Center(child: CircularProgressIndicator(color: context.theme.scaffoldBackgroundColor)),
           error: (error, stack) => Center(child: Text('Error: $error')),
           data: (config) => ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
@@ -62,7 +63,7 @@ class FiltersView extends ConsumerWidget {
   /// Builds a single filter section based on its type.
   Widget _buildSection(BuildContext context, WidgetRef ref, FiltersProvider notifier, FilterSection section) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 24.h),
+      padding: EdgeInsets.only(bottom: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -108,23 +109,23 @@ class FiltersView extends ConsumerWidget {
                 SizedBox(width: 12.w),
 
                 // Brand icon placeholder
-                if (option.iconUrl != null) ...[
-                  Container(
-                    width: 32.r,
-                    height: 32.r,
-                    decoration: BoxDecoration(color: primaryColor.withValues(alpha: 0.1), shape: BoxShape.circle),
-                    child: Icon(Icons.language, size: 18.r, color: primaryColor),
-                  ),
-                  SizedBox(width: 12.w),
-                ],
+                // if (option.iconUrl != null) ...[
+                //   Container(
+                //     width: 32.r,
+                //     height: 32.r,
+                //     decoration: BoxDecoration(color: primaryColor.withValues(alpha: 0.1), shape: BoxShape.circle),
+                //     child: Icon(Icons.language, size: 18.r, color: primaryColor),
+                //   ),
+                //   SizedBox(width: 12.w),
+                // ],
 
                 // Label
                 Expanded(
                   child: Text(
                     option.label,
                     style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
                       color: context.theme.primaryColorDark,
                     ),
                   ),
@@ -190,9 +191,9 @@ class FiltersView extends ConsumerWidget {
           onChanged: notifier.updateTagSearch,
           decoration: InputDecoration(
             hintText: 'Search tags',
-            hintStyle: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w400, color: Colors.grey.shade600),
+            hintStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: Colors.grey.shade600),
             prefixIcon: Padding(
-              padding: EdgeInsets.only(left: 16.w, right: 8.w),
+              padding: EdgeInsets.only(left: 12.w, right: 8.w),
               child: Icon(Icons.search, color: Colors.grey.shade800, size: 22.r),
             ),
             contentPadding: EdgeInsets.symmetric(vertical: 12.h),
@@ -227,8 +228,8 @@ class FiltersView extends ConsumerWidget {
                   child: Text(
                     option.label,
                     style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w500,
                       color: isSelected ? primaryColor : Colors.grey.shade700,
                     ),
                   ),

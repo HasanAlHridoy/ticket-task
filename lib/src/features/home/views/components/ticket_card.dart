@@ -162,7 +162,7 @@ class TicketCard extends StatelessWidget {
           if (icon != null) ...[Icon(icon, size: 8.r, color: iconColor), SizedBox(width: 8.w)],
           Text(
             text,
-            style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade700, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade700, fontWeight: FontWeight.w500),
           ),
         ],
       ),

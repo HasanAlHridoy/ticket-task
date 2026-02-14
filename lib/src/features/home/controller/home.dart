@@ -13,6 +13,10 @@ class HomeProvider extends AsyncNotifier<List<Ticket>> {
   List<Ticket> _allTickets = [];
   List<Ticket> get allTickets => _allTickets;
 
+  /// Currently applied filter selections.
+  Map<String, Set<String>> _appliedSelections = {};
+  Map<String, Set<String>> get appliedSelections => _appliedSelections;
+
   @override
   Future<List<Ticket>> build() async {
     _allTickets = await TicketService().fetchTickets();
@@ -21,31 +25,38 @@ class HomeProvider extends AsyncNotifier<List<Ticket>> {
   }
 
   /// Apply filters to the ticket list.
-  void applyFilters({
-    required Set<String> selectedBrands,
-    required String? selectedPriority,
-    required Set<String> selectedTags,
-  }) {
+  void applyFilters({required Map<String, Set<String>> selections}) {
+    _appliedSelections = Map.from(selections);
     List<Ticket> filtered = List.from(_allTickets);
 
-    // Filter by brand (senderName)
-    if (selectedBrands.isNotEmpty) {
-      filtered = filtered.where((t) {
-        final brandId = t.senderName.toLowerCase().replaceAll(' ', '_');
-        return selectedBrands.contains(brandId);
-      }).toList();
-    }
+    for (final entry in selections.entries) {
+      final sectionId = entry.key;
+      final selectedIds = entry.value;
 
-    // Filter by priority
-    if (selectedPriority != null) {
-      filtered = filtered.where((t) => t.priority.name == selectedPriority).toList();
-    }
+      if (selectedIds.isEmpty) continue;
 
-    // Filter by tags (ticket must have at least one of the selected tags)
-    if (selectedTags.isNotEmpty) {
-      filtered = filtered.where((t) {
-        return t.tags.any((tag) => selectedTags.contains(tag.name));
-      }).toList();
+      switch (sectionId) {
+        case 'brand':
+          filtered = filtered.where((t) {
+            final brandId = t.senderName.toLowerCase().replaceAll(' ', '_');
+            return selectedIds.contains(brandId);
+          }).toList();
+        case 'priority':
+          final selectedPriority = selectedIds.firstOrNull;
+          if (selectedPriority != null) {
+            filtered = filtered.where((t) => t.priority.name == selectedPriority).toList();
+          }
+        case 'tags':
+          filtered = filtered.where((t) {
+            return t.tags.any((tag) => selectedIds.contains(tag.name));
+          }).toList();
+        case 'overdue':
+          final selectedValue = selectedIds.firstOrNull;
+          if (selectedValue != null) {
+            final isOverdue = selectedValue == 'true';
+            filtered = filtered.where((t) => t.isOverdue == isOverdue).toList();
+          }
+      }
     }
 
     ticketCount = filtered.length;
@@ -54,6 +65,7 @@ class HomeProvider extends AsyncNotifier<List<Ticket>> {
 
   /// Clear all filters and show all tickets.
   void clearFilters() {
+    _appliedSelections = {};
     ticketCount = _allTickets.length;
     state = AsyncData(_allTickets);
   }

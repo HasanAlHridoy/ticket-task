@@ -4,11 +4,11 @@ import 'package:gian_ticket_task/src/features/filters/model/response/filters.dar
 import 'package:gian_ticket_task/src/features/filters/services/filter_service.dart';
 import 'package:gian_ticket_task/src/features/home/controller/home.dart';
 
-typedef FiltersNotifier = AsyncNotifierProvider<FiltersProvider, FilterConfig>;
+typedef FiltersNotifier = AutoDisposeAsyncNotifierProvider<FiltersProvider, FilterConfig>;
 
 final filtersProvider = FiltersNotifier(FiltersProvider.new);
 
-class FiltersProvider extends AsyncNotifier<FilterConfig> {
+class FiltersProvider extends AutoDisposeAsyncNotifier<FilterConfig> {
   /// Tracks selected values per section. Key = section.id, Value = set of option.id's.
   final Map<String, Set<String>> _selections = {};
 
@@ -21,13 +21,19 @@ class FiltersProvider extends AsyncNotifier<FilterConfig> {
     debugPrint('FiltersProvider: loading filter config...');
 
     // Get ALL tickets (unfiltered) from HomeProvider to derive filter options
-    final tickets = ref.read(homeProvider.notifier).allTickets;
+    final homeNotifier = ref.read(homeProvider.notifier);
+    final tickets = homeNotifier.allTickets;
 
-    final config = await FilterService().fetchFilters(tickets);
+    // Get currently applied selections to ensure those sections are visible
+    final applied = homeNotifier.appliedSelections;
+    final activeSectionIds = applied.entries.where((e) => e.value.isNotEmpty).map((e) => e.key).toSet();
 
-    // Initialize empty selections for each section
+    final config = await FilterService().fetchFilters(tickets, forcedSectionIds: activeSectionIds);
+
+    // Initialize selections from HomeProvider's persistent state
+    _selections.clear();
     for (final section in config.sections) {
-      _selections.putIfAbsent(section.id, () => {});
+      _selections[section.id] = Set.from(applied[section.id] ?? {});
     }
 
     return config;
@@ -66,21 +72,18 @@ class FiltersProvider extends AsyncNotifier<FilterConfig> {
     ref.notifyListeners();
   }
 
-  /// Clear all selections.
+  /// Clear all filters.
   void clearFilters() {
     _selections.clear();
     _tagSearchQuery = '';
+    ref.read(homeProvider.notifier).clearFilters();
     ref.notifyListeners();
   }
 
   /// Apply filters — tells HomeProvider to filter the tickets.
   void applyFilters() {
     final homeNotifier = ref.read(homeProvider.notifier);
-    homeNotifier.applyFilters(
-      selectedBrands: _selections['brand'] ?? {},
-      selectedPriority: _selections['priority']?.firstOrNull,
-      selectedTags: _selections['tags'] ?? {},
-    );
+    homeNotifier.applyFilters(selections: _selections);
   }
 
   /// Get the currently selected dropdown label for a section (if any).
